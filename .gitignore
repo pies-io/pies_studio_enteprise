@@ -1,0 +1,4 @@
+db/
+generated/
+config/vault/data/**
+config/license/*.license
