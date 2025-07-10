@@ -1,7 +1,7 @@
 
-[PIES Studio Online User Guide](../PIES%20Studio%20Online%20User%20Guide.md)
-
 # PIES Studio - Offline Deployment Guide
+
+A confluence version of this guide can also be found [here](https://pie.atlassian.net/wiki/x/AYAlV).
 
 This guide walks you through setting up the full PIES Studio platform in offline mode using Docker Compose. It is designed for enterprise customers who have received access to licensed containers and configuration files.
 
@@ -41,7 +41,13 @@ If you’re using a VM or air-gapped machine, ensure Docker can access the requi
 ---
 
 ## **2. Directory Structure**
+> [!IMPORTANT]
+> While this guide references the directory structure below for Docker Compose, it is not required to follow this exact layout. You may use a custom setup, but ensure that the paths to the config.json files are correctly mapped to the appropriate containers.
 
+### Recommended Approach
+The most straightforward way to set up the required directory structure is to clone this repository directly.
+
+### Manual Approach
 Create a directory structure as follows:
 
 ```java
@@ -108,7 +114,7 @@ Place the license file and configuration JSONs in their respective directories a
 
 Navigate to your base folder and run the provided start.sh script:
 
-```java
+```shell
 ./start.sh
 ```
 
@@ -116,19 +122,19 @@ Docker will start all services and create the required networks and volumes.
 
 To view running containers:
 
-```java
+```shell
 docker ps
 ```
 
 To view logs for a container:
 
-```java
+```shell
 docker logs -f <container_name>
 ```
 
 To shut down all services and clean up generated files, use the stop.sh script:
 
-```java
+```shell
 ./stop.sh
 ```
 
@@ -394,21 +400,21 @@ networks:
 
 The following Docker images are used in this deployment. All are hosted under the piesio organization on DockerHub:
 
-|                              |                                                |               |           |
-|:-----------------------------|:-----------------------------------------------|:--------------|:----------|
-| Service Name                 | Description                                    | Port(s)       | Image URL |
-| `pies-studio-web`            | No-code studio frontend                        | 4200          |           |
-| `pies-studio-core`           | Backend API server                             | 8080, 9081    |           |
-| `pies-studio-license-server` | License and Auth management server             | 9070          |           |
-| `pies-studio-license-web`    | Admin portal for licenses and SSO              | 4100          |           |
-| `pies-studio-codegen`        | Code generation engine                         | 9090          |           |
-| `docker`                     | Docker-in-Docker service for preview execution | 9010, 9020    |           |
-| `pies-studio-preview`        | Frontend client for previewing deployed apps   | 4300          |           |
-| `pies-studio-ai`             | Backend AI assistant service                   | 9075, 9076    |           |
-| `pies-studio-vault`          | Modified Vault image for secure secret storage | 8200          |           |
-| `mongo`                      | MongoDB database                               | 28018 (27017) |           |
-| `mysql`                      | MySQL database for codegen                     | 3306          |           |
-| `redis`                      | Caching and OTP queue                          | 6379          |           |
+|                              |                                                |               |                                                                                                   |
+|:-----------------------------|:-----------------------------------------------|:--------------|:--------------------------------------------------------------------------------------------------|
+| Service Name                 | Description                                    | Port(s)       | Image URL                                                                                         |
+| `pies-studio-web`            | No-code studio frontend                        | 4200          |[Docker Hub](https://hub.docker.com/repository/docker/piesio/pies-studio-web/general)              |
+| `pies-studio-core`           | Backend API server                             | 8080, 9081    |[Docker Hub](https://hub.docker.com/repository/docker/piesio/pies-studio-core/general)             |
+| `pies-studio-license-server` | License and Auth management server             | 9070          |[Docker Hub](https://hub.docker.com/repository/docker/piesio/pies-studio-license-server/general)   |
+| `pies-studio-license-web`    | Admin portal for licenses and SSO              | 4100          |[Docker Hub](https://hub.docker.com/repository/docker/piesio/pies-studio-license-web/general)      |
+| `pies-studio-codegen`        | Code generation engine                         | 9090          |[Docker Hub](https://hub.docker.com/repository/docker/piesio/pies-studio-codegen/general)          |
+| `docker`                     | Docker-in-Docker service for preview execution | 9010, 9020    |[Docker Hub](https://hub.docker.com/repository/docker/piesio/pies-studio-dind/general)             |
+| `pies-studio-preview`        | Frontend client for previewing deployed apps   | 4300          |[Docker Hub](https://hub.docker.com/repository/docker/piesio/pies-studio-preview/general)          |
+| `pies-studio-ai`             | Backend AI assistant service                   | 9075, 9076    |[Docker Hub](https://hub.docker.com/repository/docker/piesio/pies-studio-ai/general)               |
+| `pies-studio-vault`          | Modified Vault image for secure secret storage | 8200          |[Docker Hub](https://hub.docker.com/repository/docker/piesio/pies-studio-vault/general)            |
+| `mongo`                      | MongoDB database                               | 28018 (27017) |                                                                                                   |
+| `mysql`                      | MySQL database for codegen                     | 3306          |                                                                                                   |
+| `redis`                      | Caching and OTP queue                          | 6379          |                                                                                                   |
 
 The setup also includes official images for:
 
@@ -420,13 +426,13 @@ The setup also includes official images for:
 
 **start.sh**
 
-```java
+```bash
 docker compose up -d
 ```
 
 **stop.sh**
 
-```java
+```bash
 docker compose down
 rm -rf certs/client/*
 rm -rf generated/*
