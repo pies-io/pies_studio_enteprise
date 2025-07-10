@@ -198,7 +198,7 @@ services:
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=ajsfa8osfy90a8 # Replace with <YOUR_MYSQL_DB_PASSWORD>
+      - MYSQL_ROOT_PASSWORD=ajsfa8osfy90a8 # Replace with <YOUR_MYSQL_DB_PASSWORD>. Same password needs to reflect in the codegen config.json
       - MYSQL_DATABASE=pies_preview_db
 
   mongo:
@@ -212,7 +212,7 @@ services:
       - ./db/mongo:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=ajsfa8osfy90a8
+      - MONGO_INITDB_ROOT_PASSWORD=ajsfa8osfy90a8 # Replace with <YOUR_MONGODB_PASSWORD>. Same password should be reflected in the core and license server config.json
 
   redis:
     image: redis
