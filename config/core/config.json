@@ -1,0 +1,34 @@
+{
+    "host": "mongodb://root:ajsfa8osfy90a8@host.docker.internal:28018/",
+    "db": "pies_db",
+    "domain": "",
+    "log_snapshot_path": "./logs",
+    "piesUrl": "http://localhost:4200",
+    "core_url": "http://host.docker.internal:8080",
+    "license_url": "http://host.docker.internal:9070",
+    "loki_web": "http://host.docker.internal:4300",
+    "loki_ws": "ws://host.docker.internal:9090",
+    "loki_http": "http://host.docker.internal:9090",
+    "agbi_url": "http://host.docker.internal:9070",
+    "registration_url": "http://localhost:4100",
+    "deployment": {
+        "ws": "ws://host.docker.internal:9072/deployer/socket",
+        "http": "http://host.docker.internal:9071/deployer/api"
+    },
+    "mail": {
+        "host": "smtp-hve.office365.com",
+        "port": 587,
+        "username": "donotreply@pies.studio",
+        "password": "D0N0TP!#df94"
+    },
+    "default_smtp": {
+        "name": "PIES Studio Default Server",
+        "host": "smtp-hve.office365.com",
+        "port": 587,
+        "username": "donotreply@pies.studio",
+        "password": "D0N0TP!#df94"
+    },
+    "license": {
+        "secret": "ple_813c5eb577a94addb961a44f500b65d8d1c874825f33ca83d005dff1ff4c711d4a19d04f4d514dda0dc2a1a5eeba00f98dc58d30259dba2d0eba23d9b4690d90"
+    }
+}

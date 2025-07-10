@@ -1,0 +1,24 @@
+{
+    "project_path": "./generated/",
+    "sub_domain": "",
+    "vault": {
+        "url": "http://host.docker.internal:8200",
+        "mount": "app/secrets",
+        "init_response_path": "../vault/config/init-response.json"
+    },
+    "redis": {
+        "addr": "host.docker.internal:6379",
+        "password": ""
+    },
+    "url": {
+        "ui": "http://host.docker.internal:9010",
+        "backend": "http://host.docker.internal:9020",
+        "core": "http://host.docker.internal:8080"
+    },
+    "db": {
+        "host": "host.docker.internal:3306",
+        "name": "pies_preview_db",
+        "username": "root",
+        "password": "ajsfa8osfy90a8"
+    }
+}

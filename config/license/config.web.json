@@ -1,0 +1,6 @@
+{
+    "hostUrl": "http://localhost:4100",
+    "backendUrl": "http://localhost:9070",
+    "authUrl": "http://localhost:9070/auth/login",
+    "authRedirectUrl": "http://localhost:4100/auth/login"
+}

@@ -1,0 +1,227 @@
+# Port Mappings -
+# 1. PIES Studio Web
+#    - 50001:80
+# 2. PIES Studio Core
+#    - 55001:8080
+#    - 55002:9081
+# 3. PIES Studio License Server
+#    - 55003:9070
+# 4. PIES Studio License Client
+#    - 50002:80
+# 5. PIES Studio Preview Engine Web
+#    - 50003:80
+# 6. PIES Studio Preview Engine Core
+#    - 55004:9090
+# 7. PIES Studio Deployer
+# 8. PIES AI Engine
+# 9. Redis
+# 10. MongoDB
+
+
+version: '3.7'
+
+services:
+
+  # pies-studio-pxory:
+  #   image: pies-studio-proxy:latest
+  #   container_name: pies-studio-proxy
+  #   ports:
+  #     - "4200:4200"
+  #   environment:
+  #     - DB_URL=mongodb://root:ajsfa8osfy90a8@host.docker.internal:28018
+  #     - DB_NAME=pies_db
+  #     - STUDIO_URL=http://host.docker.internal:80
+  #     - SERVER_PORT=4200
+  #     - ENVIRONMENT=prod
+  #   networks:
+  #     - pies-network
+
+
+  # PIES Studio License Server
+  pies-studio-license-server:
+    image: piesio/pies-studio-license-server:offline
+    container_name: pies-studio-license-server
+    ports:
+      - "9070:9070"
+    environment:
+      - CONFIG_PATH=/bin/app/config/config.json
+      - ENVIRONMENT=offline
+      - REDIRECT_URI_STUDIO=http://localhost:4200/login
+      - REDIRECT_URI_ADMIN=http://localhost:4100/auth/login
+      - ORG_DOMAIN=localhost
+    networks:
+      - pies-network
+    volumes:
+      - ./config/license/config.json:/bin/app/config/config.json:ro
+      - ./config/license/pies_studio.license:/bin/app/pies_studio.license:rw
+    depends_on:
+      - redis
+      - mongo
+  
+  # PIES Studio License Web
+  pies-studio-license-web:
+    image: piesio/pies-studio-license-web:offline
+    container_name: pies-studio-license-web
+    ports:
+      - "4100:80"
+    networks:
+      - pies-network
+    volumes:
+      - ./config/license/config.web.json:/usr/share/nginx/html/browser/assets/env/config.json:ro
+    depends_on:
+      - pies-studio-license-server
+
+  # PIES Studio Core
+  pies-studio-core:
+    image: piesio/pies-studio-core:offline
+    container_name: pies-studio-core
+    ports:
+      - "8080:8080"
+      - "9081:9081"
+    environment:
+      - CONFIG_PATH=/dist/config/config.json
+      - ENVIRONMENT=offline
+    networks:
+      - pies-network
+    volumes:
+      - ./config/core/config.json:/dist/config/config.json:ro
+    depends_on:
+      - pies-studio-license-server
+      - mongo
+
+  # PIES Studio Web
+  pies-studio-web:
+    image: piesio/pies-studio-web:offline
+    container_name: pies-studio-web
+    ports:
+      - "4200:80"
+    networks:
+      - pies-network
+    volumes:
+      - ./config/web/config.json:/usr/share/nginx/html/assets/env/config.json:ro
+    depends_on:
+      - pies-studio-core
+
+  # PIES Studio Code Generation Engine
+  pies-studio-codegen:
+    restart: always
+    image: piesio/pies-studio-codegen:offline
+    container_name: pies-studio-codegen
+    ports:
+      - "9090:9090"
+    environment:
+      - CONFIG_PATH=/loki/config/config.json
+      - ENVIRONMENT=offline
+      - MODE=listen
+      - DOCKER_HOST=tcp://docker:2376
+      - DOCKER_CERT_PATH=/certs/client/
+      - DOCKER_TLS_VERIFY=enable
+    volumes:
+      - ./certs/client:/certs/client
+      - ./generated:/loki/generated
+      - ./config/codegen/config.json:/loki/config/config.json:ro
+      - ./config/vault/config/init-response.json:/vault/config/init-response.json
+    networks:
+      - pies-network
+    depends_on:
+      - pies-studio-vault
+      - mysql
+      - redis
+      - docker
+
+  # PIES Studio Docker In Docker
+  docker:
+    image: piesio/pies-studio-dind:offline
+    container_name: docker
+    environment:
+      - CONFIG_PATH=/loki/config/config.json
+      - ENVIRONMENT=offline
+      - DOCKER_TLS_CERTDIR=/certs/
+      - DOCKER_TLS_VERIFY=enable
+      - MODE=proxy
+    ports:
+      - "9010:9010"
+      - "9020:9020"
+    volumes:
+      - ./certs/client:/certs/client
+      - ./generated:/loki/generated
+      - ./config/codegen/config.json:/loki/config/config.json:ro
+      - ./config/vault/config/init-response.json:/vault/config/init-response.json
+    networks:
+      - pies-network
+    depends_on:
+      - pies-studio-vault
+    privileged: true
+
+  # PIES Studio Preview Client
+  pies-studio-preview:
+    image: piesio/pies-studio-preview:offline
+    container_name: pies-studio-preview
+    ports:
+      - "4300:80"
+    networks:
+      - pies-network
+    volumes:
+      - ./config/preview/config.json:/usr/share/nginx/html/assets/env/config.json:ro
+    depends_on:
+      - pies-studio-core
+      - pies-studio-codegen
+
+
+  # PIES Studio AI
+  pies-studio-ai:
+    image: piesio/pies-studio-ai:offline
+    container_name: pies-studio-ai
+    ports:
+      - "9075:9075"
+      - "9076:9076"
+    environment:
+      - AUTH_URL=http://host.docker.internal:9070/auth/key
+    networks:
+      - pies-network
+
+  # PIES Studio Vault
+  pies-studio-vault:
+    image: piesio/pies-studio-vault:offline
+    container_name: pies-studio-vault
+    ports:
+      - "8200:8200"
+    networks:
+      - pies-network
+    volumes:
+      - ./config/vault/config/:/vault/config/
+      - ./config/vault/data:/vault/data:rw
+    
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=ajsfa8osfy90a8 # Replace with <YOUR_MYSQL_DB_PASSWORD>
+      - MYSQL_DATABASE=pies_preview_db
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "28018:27017"
+    networks:
+      - pies-network
+    volumes:
+      - ./db/mongo:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=ajsfa8osfy90a8
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - pies-network
+    
+networks:
+    pies-network:
+        driver: bridge

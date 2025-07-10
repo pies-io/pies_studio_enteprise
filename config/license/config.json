@@ -1,0 +1,27 @@
+{
+    "host": "mongodb://root:ajsfa8osfy90a8@host.docker.internal:28018/",
+    "db": "pies_license_offline_db",
+    "redis": {
+        "addr": "host.docker.internal:6379",
+        "password": ""
+    },
+    "mail": {
+        "host": "smtp.office365.com",
+        "port": 587,
+        "username": "noreply_studio@pies.io",
+        "password": ""
+    },
+    "deployer": {
+        "secret": "pbe_a0056ff13a3a18a66c41e5f5351c4a179c9fe39552d1ccbacf054ed07f1e2ce87ec1e35b37c23ca7d47a9cb1483394b94247d774e429a116d1cc86a14b8224f9"
+    },
+    "pies_url": "http://localhost:4200",
+    "pies_license_url": "http://localhost:4100",
+    "pies_billing_url": "",
+    "pies_deployer_url": "http://host.docker.internal:9071",
+    "pies_ai_url": {
+        "ws": "ws://host.docker.internal:9076/ai/ws",
+        "http": "http://host.docker.internal:9075/ai"
+    },
+    "pies_auth_url": "http://host.docker.internal:9070/auth/login/success",
+    "secret": "ple_813c5eb577a94addb961a44f500b65d8d1c874825f33ca83d005dff1ff4c711d4a19d04f4d514dda0dc2a1a5eeba00f98dc58d30259dba2d0eba23d9b4690d90"
+}

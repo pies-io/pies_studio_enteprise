@@ -1,0 +1,6 @@
+{
+    "baseUrl": "http://localhost:8080/core",
+    "baseWsUrl": "ws://localhost:9081/socket",
+    "licenseServerUrl": "http://localhost:9070",
+    "previewServerUrl": "http://localhost:9010"
+}

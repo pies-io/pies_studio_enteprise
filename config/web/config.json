@@ -1,0 +1,8 @@
+{
+    "baseUrl": "http://localhost:8080/core",
+    "baseWebSocketUrl": "ws://localhost:9081/socket",
+    "previewUrl": "http://localhost:4300",
+    "agbiUrl": "ws://localhost:9070",
+    "licenseServerUrl": "http://localhost:9070",
+    "licenseClientUrl": "http://localhost:4100"
+}
