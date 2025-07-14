@@ -1,0 +1,10 @@
+{
+    "project_path": "/deployer/generated/",
+    "url": {
+        "core": "http://host.docker.internal:8080/core"
+    },
+    "loki": {
+        "ws": "ws://host.docker.internal:9090/loki/socket/",
+        "http": "http://host.docker.internal:9010/loki/"
+    }
+}

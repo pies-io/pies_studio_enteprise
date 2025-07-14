@@ -129,6 +129,31 @@ services:
       - redis
       - docker
 
+  # PIES Studio Deployment Engine
+  pies-studio-deployer:
+    restart: always
+    image: piesio/pies-studio-deployer:offline
+    container_name: pies-studio-deployer
+    ports:
+      - "9071:9071"
+      - "9072:9072"
+    environment:
+      - CONFIG_PATH=/deployer/config/config.json
+      - CLOUD_CONFIG_PATH=/deployer/config/config.cloud.json
+      - ENVIRONMENT=offline
+      - DOCKER_HOST=tcp://docker:2376
+      - DOCKER_CERT_PATH=/certs/client/
+      - DOCKER_TLS_VERIFY=enable
+    volumes:
+      - ./certs/client:/certs/client
+      - ./generated:/deployer/generated
+      - ./config/deployer/config.json:/deployer/config/config.json:ro
+      - ./config/deployer/service_account_config.json:/deployer/config/config.cloud.json:ro
+    networks:
+      - pies-network
+    depends_on:
+      - docker
+
   # PIES Studio Docker In Docker
   docker:
     image: piesio/pies-studio-dind:offline
